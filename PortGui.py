@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-import sys
-import time
+
 from easygui import *
 import socket
 import threading
@@ -14,7 +13,7 @@ ip,startport,endport = Answers
 #ip = "127.0.0.1"
 ports = range(int(startport), int(endport))
 print_lock = threading.Lock()
-file1 = open("out.txt","r+")
+
 class WorkerThread(threading.Thread):
     def __init__(self,queue,tid):
         threading.Thread.__init__(self)
@@ -34,7 +33,7 @@ class WorkerThread(threading.Thread):
                     response = sock.connect((ip,port))   
                     with print_lock:
                     
-                        file1.write("Thread %d reported port %d OPEN \n" % (self.tid,port))       
+                        print("Port %d is OPEN" %port)       
                 except:
                     pass
                 sock.close()
@@ -44,12 +43,6 @@ class WorkerThread(threading.Thread):
                 print "Worker %d have exited, no more ports to scan" %self.tid
                 return
             
-                #msgbox=(port, "Open port")
-            finally:
-            
-                text =file1.readlines()
-                
-                codebox("The open ports found \n", "Contents: \n", text)
                 
             self.queue.task_done()
             total_ports +=1
@@ -74,6 +67,6 @@ queue.join()
 for item in threads:
     item.join()
 
-file1.close()
+
 print "Scan Completed"
     
